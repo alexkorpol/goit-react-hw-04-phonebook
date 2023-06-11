@@ -26,7 +26,7 @@ import Wrapper from './Wrapper';
     }
   }
     // ! ====== Write any change of state to localStorage ======
-    componentDidUpdate(_, prevState) {
+    componentDidUpdate(state, prevState) {
       console.log('App componentDidUpdate');
 
       const nextContacts = this.state.contacts;
