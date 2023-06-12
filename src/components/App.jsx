@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
+import useLocalStorage from './hook/useLocalStorage';
 import data from './data/data.json'
 import Contacts from './Contacts';
 import Forma from './Forma';
@@ -8,43 +9,15 @@ import { Title } from './Wrapper/Wrapper.styled';
 import Filter from './Filter';
 import Wrapper from './Wrapper';
 
-  class App extends Component {
-    state = {
-      contacts: data,
-      filter: '',
-
-    };
-    // ! ====== Write from localStorage in state (if localStorage data exist)======
-    componentDidMount() {
-    console.log('App componentDidMount');
-
-    const parsedContacts= JSON.parse(localStorage.getItem('contacts'));
-
-      if (parsedContacts) {
-        console.log("write contacts in state from localStorage", parsedContacts);
-      this.setState({ contacts: parsedContacts });
-    }
-  }
-    // ! ====== Write any change of state to localStorage ======
-    componentDidUpdate(state, prevState) {
-      console.log('App componentDidUpdate');
-
-      const nextContacts = this.state.contacts;
-      const prevContacts = prevState.contacts;
-
-      if (nextContacts !== prevContacts) {
-        console.log('Оновився об"єкт contacts із state, записуємо contacts у  localStorage');
-        localStorage.setItem('contacts', JSON.stringify(nextContacts))
-      }
-    }
-
+function App(){
+    const [contacts, setContacts] = useLocalStorage(data);
+  const [filter, setFilter] = useState('');
 
     // ! ====== Add contact to state ======
-    addNewContact = ({ nameNew, numberNew}) => {
+    const addNewContact = ({ nameNew, numberNew}) => {
       console.log("nameNew, numberNew", nameNew, numberNew);
 
     const newNameToLowerCase = nameNew.toLowerCase();
-      const { contacts } = this.state;
 
       let index = -1
 
@@ -68,54 +41,52 @@ import Wrapper from './Wrapper';
       number: numberNew,
     };
 
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, newContact],
-    }));
+    setContacts(prevState =>
+      [...prevState, newContact]
+    );
   }
 
     // ! ====== Delete contact from state ======
 
-    deleteContact = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
+    const deleteContact = id => {
+    setContacts(prevState =>
+      prevState.filter(contact => contact.id !== id),
 
-    }));
-  };
-
-    // ! ====== Write a content of filter to state from user ======
-    valueInputFilter = event => {
-      this.setState({ filter: event.currentTarget.value });
+      );
     };
 
+
+    // ! ====== Write a content of filter to state from user ======
+    const valueInputFilter = event => {
+      setFilter( event.currentTarget.value );
+    };
+
+
     // ! ====== Function-filter contacts for render ======
-    visibleContacts = () => {
+    const visibleContacts = () => {
     console.log("visibleContacts was to work")
-    const { filter, contacts } = this.state;
+    // const { filter, contacts } = this.state;
     const seekLetterOfFilter = filter.toLowerCase();
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(seekLetterOfFilter)
     );
-  };
+    };
 
 
-    render() {
-      const { filter } = this.state;
-      const visibleContacts = this.visibleContacts();
       return (
         <Wrapper>
           <Title>Phonebook</Title>
-          <Forma onSubmit={this.addNewContact} />
+          <Forma onSubmit={addNewContact} />
           <Title>Contacts</Title>
-          <Filter value={filter} onChange={this.valueInputFilter} />
+          <Filter value={filter} onChange={valueInputFilter} />
           <Contacts
-            contacts={visibleContacts}
-            pressDeleteContact={this.deleteContact}
+            contacts={visibleContacts()}
+            pressDeleteContact={deleteContact}
         />
         </Wrapper>
 
       )
     }
-  }
-
 
   export default App;
+
