@@ -11,16 +11,13 @@ import Wrapper from './Wrapper';
 
 function App(){
     const [contacts, setContacts] = useLocalStorage(data);
-  const [filter, setFilter] = useState('');
+    const [filter, setFilter] = useState('');
 
     // ! ====== Add contact to state ======
     const addNewContact = ({ nameNew, numberNew}) => {
-      console.log("nameNew, numberNew", nameNew, numberNew);
+      const newNameToLowerCase = nameNew.toLowerCase();
 
-    const newNameToLowerCase = nameNew.toLowerCase();
-
-      let index = -1
-
+     let index = -1
      index = (contacts.findIndex(({ name, number }) => (name.toLowerCase() === newNameToLowerCase && number === numberNew)))
     if(index !== -1){
         Notify.failure(`${contacts[index].name} and number ${contacts[index].number}   is already in list contacts`);
@@ -46,7 +43,7 @@ function App(){
     );
   }
 
-    // ! ====== Delete contact from state ======
+    // ! ====== Delete contact from state after click button 'Delete' ======
 
     const deleteContact = id => {
     setContacts(prevState =>
@@ -64,8 +61,6 @@ function App(){
 
     // ! ====== Function-filter contacts for render ======
     const visibleContacts = () => {
-    console.log("visibleContacts was to work")
-    // const { filter, contacts } = this.state;
     const seekLetterOfFilter = filter.toLowerCase();
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(seekLetterOfFilter)

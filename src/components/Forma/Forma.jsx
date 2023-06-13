@@ -1,4 +1,3 @@
-// import React, { Component } from 'react';
 import { useState } from 'react';
 import { Button, Form, Input, Label, Span } from './Forma.styled';
 import { nanoid } from 'nanoid'
@@ -19,14 +18,9 @@ export default function Forma({onSubmit}) {
     const { target } = event;
     setState(prevState => ({ ...prevState,[nameValueInput]: target.value,
     }));
-   console.log("state>>>", state)
   };
 
-
-
-
   const handleSubmit = e => {
-  console.log("state in handleSubmit >>>", state )
     e.preventDefault();
     onSubmit({ nameNew, numberNew });
     resetForm();

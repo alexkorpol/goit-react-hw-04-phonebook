@@ -15,3 +15,7 @@ Wrapper.propTypes = {
 };
 
 export default Wrapper;
+
+Wrapper.propTypes = {
+  children: PropTypes.array.isRequired
+};

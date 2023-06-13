@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
     });
 
    useEffect(() => {
-     console.log("useEffect", Date.now())
      window.localStorage.setItem('contacts', JSON.stringify(state));
     }, [state]);
 
